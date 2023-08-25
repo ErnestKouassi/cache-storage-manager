@@ -1,1 +1,5 @@
-export * from './lib/storage.manager';
+export { CookiesManager } from './lib/cookies.manager';
+export {
+  LocalStorageManager,
+  SessionStorageManager,
+} from './lib/storage.manager';
