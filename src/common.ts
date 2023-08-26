@@ -1,7 +1,7 @@
 export const map = (
   object: Record<string, unknown>,
-  callback: (x: string) => void
-): void => {
+  callback: (key: string) => unknown
+) => {
   try {
     Object.keys(object).forEach(callback);
   } catch (error) {
@@ -11,8 +11,9 @@ export const map = (
 
 export const isNull = <T>(item: T) => item === null || item === undefined;
 
-export const isPrimitive = (a: any) => {
+export const isPrimitive = (a?: string | number | boolean) => {
   const type = typeof a;
+
   return (
     type === 'string' || type === 'number' || type === 'boolean' || isNull(a)
   );
@@ -35,3 +36,5 @@ export const json = <T extends Record<string, never>>(storage: Storage): T =>
     }),
     {} as T
   );
+
+export type TPrimitive = string | number | boolean;

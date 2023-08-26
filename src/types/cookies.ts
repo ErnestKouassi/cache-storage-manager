@@ -20,5 +20,5 @@ export type SetCookies = Partial<{
 
 export type TypeCookieStorage = TStorage & {
   json<T>(): T;
-  set<T = unknown>(key: string, object: T, parameters?: SetCookies): void;
+  set<T>(key: string, object: T, parameters?: SetCookies): void;
 };

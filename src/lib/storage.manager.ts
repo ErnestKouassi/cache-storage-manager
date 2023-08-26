@@ -1,5 +1,10 @@
-import { Subscribe, TypeStorage } from '../types/storage';
-import { getStorage, isNull, json, map } from '../utils';
+import { getStorage, isNull, json, map } from '../common';
+import {
+  Subscribe,
+  TStorage,
+  TypeStorage,
+  Unsubscribe,
+} from '../types/storage';
 
 export const createStorage = (
   getStorageProvider: () => Storage
@@ -12,9 +17,17 @@ export const createStorage = (
     listeners.forEach((fn) => fn(store));
   };
 
-  return {
+  return <
+    TStorage & {
+      json<T>(parse?: boolean): T;
+      set<T = unknown>(key: string, object: T): void;
+    }
+  >(<unknown>{
     delete: deleteItem,
-    listener: (fn) => {
+    listener: (fn: {
+      (storage: unknown): Unsubscribe;
+      (storage: unknown): Unsubscribe;
+    }) => {
       listeners.add(fn);
       return () => listeners.delete(fn);
     },
@@ -31,11 +44,11 @@ export const createStorage = (
       listeners.forEach((fn) => fn(getStorageProvider()));
     },
     get: <T>(key: string) => getStorage<T>(key, getStorageProvider()),
-    set: (key, object) => {
+    set: (key: string, object: any) => {
       getStorageProvider().setItem(key, JSON.stringify(object));
       listeners.forEach((fn) => fn(getStorageProvider()));
     },
-  };
+  });
 };
 
 export const SessionStorageManager: TypeStorage = createStorage(
